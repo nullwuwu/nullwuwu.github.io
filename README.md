@@ -10,3 +10,4 @@
 * [Yarn 使用手册](https://github.com/kailcc/blog/issues/4)
 * [Vuejs最佳实践](https://github.com/kailcc/blog/issues/5)
 * [Hybrid App技术解析](https://github.com/kailcc/blog/issues/6)
+* [rpc](https://github.com/kailcc/blog/issues/7)

@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>常用的设计模式和应用场景</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>记一次线上环境内存报警</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,5 +619,6 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="610e8956-ffdb-4073-8f3b-4dd4c006c2f2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🥈</span></div><h1 class="page-title">常用的设计模式和应用场景</h1></header><div class="page-body"><p id="4e68036e-490d-440c-8e47-c0b82a0aec23" class="">
+</style></head><body><article id="60720e1f-dc05-476f-9acf-aae069c089ca" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🏖️</span></div><h1 class="page-title">记一次线上环境内存报警</h1></header><div class="page-body"><p id="169ec548-1d5b-4e47-a241-41952fb7b419" class="">
+</p><ul id="3a7cc30d-a3b9-4514-9bb4-5106a3266088" class="toggle"><li><details open=""><summary>现象：接入了服务监控之后，发现内存占用率99%</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="ab55a2c6-fb94-49ed-b6da-a9800d2a8afa"><div style="font-size:1.5em"><span class="icon">🐞</span></div><div style="width:100%">发现pm2 log占用了大量内存（80%），了解到linux服务器读写大存储文件是会放在内存中，因为服务一直在打log、大文件一直在被读写，导致内存不得释放。</div></figure><p id="c8c5c2f9-b550-4302-9610-d664aa3e9555" class="">先清空了日志缓存，然后对日志文件进行管理，定时定量去分割日志文件。</p></details></li></ul><p id="cec6dd90-d1e4-4988-97dd-0aa6b72db431" class="">
 </p></div></article></body></html>

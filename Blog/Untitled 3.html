@@ -1,0 +1,734 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>链表</title><style>
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	text-indent: -1.7em;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, YuMincho, "Yu Mincho", "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Songti TC", "Songti SC", "SimSun", "Nanum Myeongjo", NanumMyeongjo, Batang, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC', 'Noto Sans CJK KR'; }
+
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC', 'Noto Sans Mono CJK KR'; }
+
+.highlight-default {
+}
+.highlight-gray {
+	color: rgb(155,154,151);
+}
+.highlight-brown {
+	color: rgb(100,71,58);
+}
+.highlight-orange {
+	color: rgb(217,115,13);
+}
+.highlight-yellow {
+	color: rgb(223,171,1);
+}
+.highlight-teal {
+	color: rgb(15,123,108);
+}
+.highlight-blue {
+	color: rgb(11,110,153);
+}
+.highlight-purple {
+	color: rgb(105,64,165);
+}
+.highlight-pink {
+	color: rgb(173,26,114);
+}
+.highlight-red {
+	color: rgb(224,62,62);
+}
+.highlight-gray_background {
+	background: rgb(235,236,237);
+}
+.highlight-brown_background {
+	background: rgb(233,229,227);
+}
+.highlight-orange_background {
+	background: rgb(250,235,221);
+}
+.highlight-yellow_background {
+	background: rgb(251,243,219);
+}
+.highlight-teal_background {
+	background: rgb(221,237,234);
+}
+.highlight-blue_background {
+	background: rgb(221,235,241);
+}
+.highlight-purple_background {
+	background: rgb(234,228,242);
+}
+.highlight-pink_background {
+	background: rgb(244,223,235);
+}
+.highlight-red_background {
+	background: rgb(251,228,228);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(55, 53, 47, 0.6);
+	fill: rgba(55, 53, 47, 0.6);
+}
+.block-color-brown {
+	color: rgb(100,71,58);
+	fill: rgb(100,71,58);
+}
+.block-color-orange {
+	color: rgb(217,115,13);
+	fill: rgb(217,115,13);
+}
+.block-color-yellow {
+	color: rgb(223,171,1);
+	fill: rgb(223,171,1);
+}
+.block-color-teal {
+	color: rgb(15,123,108);
+	fill: rgb(15,123,108);
+}
+.block-color-blue {
+	color: rgb(11,110,153);
+	fill: rgb(11,110,153);
+}
+.block-color-purple {
+	color: rgb(105,64,165);
+	fill: rgb(105,64,165);
+}
+.block-color-pink {
+	color: rgb(173,26,114);
+	fill: rgb(173,26,114);
+}
+.block-color-red {
+	color: rgb(224,62,62);
+	fill: rgb(224,62,62);
+}
+.block-color-gray_background {
+	background: rgb(235,236,237);
+}
+.block-color-brown_background {
+	background: rgb(233,229,227);
+}
+.block-color-orange_background {
+	background: rgb(250,235,221);
+}
+.block-color-yellow_background {
+	background: rgb(251,243,219);
+}
+.block-color-teal_background {
+	background: rgb(221,237,234);
+}
+.block-color-blue_background {
+	background: rgb(221,235,241);
+}
+.block-color-purple_background {
+	background: rgb(234,228,242);
+}
+.block-color-pink_background {
+	background: rgb(244,223,235);
+}
+.block-color-red_background {
+	background: rgb(251,228,228);
+}
+.select-value-color-default { background-color: rgba(206,205,202,0.5); }
+.select-value-color-gray { background-color: rgba(155,154,151, 0.4); }
+.select-value-color-brown { background-color: rgba(140,46,0,0.2); }
+.select-value-color-orange { background-color: rgba(245,93,0,0.2); }
+.select-value-color-yellow { background-color: rgba(233,168,0,0.2); }
+.select-value-color-green { background-color: rgba(0,135,107,0.2); }
+.select-value-color-blue { background-color: rgba(0,120,223,0.2); }
+.select-value-color-purple { background-color: rgba(103,36,222,0.2); }
+.select-value-color-pink { background-color: rgba(221,0,129,0.2); }
+.select-value-color-red { background-color: rgba(255,0,26,0.2); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="6659e38e-66cc-47d7-988e-5f8aad2e2739" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">♟️</span></div><h1 class="page-title">链表</h1></header><div class="page-body"><h2 id="98dc4a9c-2016-428a-a5db-f078408fd428" class="">什么是链表？</h2><p id="1f6350ae-e7ba-4734-b073-cec3f58be7e6" class="">1.和数组一样，链表也是一种线性表。</p><p id="b1bd79f8-8a7a-4315-9329-778420e81096" class="">2.从内存结构来看，链表的内存结构是不连续的内存空间，是将一组零散的内存块串联起来，从而进行数据存储的数据结构。</p><p id="a1e03e2f-767e-425e-9319-fb10b93157c7" class="">3.链表中的每一个内存块被称为节点Node。节点除了存储数据外，还需记录链上下一个节点的地址，即后继指针next。</p><h2 id="36db183c-7a27-4f0b-95bf-bac000537201" class="">为什么使用链表？即链表的特点</h2><p id="b0b93def-8452-4752-b1ad-1c6345d1dd9c" class="">1.插入、删除数据效率高O(1)级别（只需更改指针指向即可），随机访问效率低O(n)级别（需要从链头至链尾进行遍历）。</p><p id="b3a89034-fbc6-4a00-9fcc-d22c32b0827b" class="">2.和数组相比，内存空间消耗更大，因为每个存储数据的节点都需要额外的空间存储后继指针。</p><h2 id="34000400-adda-40cf-b57d-e3e02f345f2d" class="">常用链表：单链表、循环链表和双向链表</h2><ol id="1c6b3981-4f01-4f2d-b803-26e2d14b79ab" class="numbered-list" start="1"><li>单链表<ol id="99b414b3-3e21-41b7-b2bc-78b727fc81f9" class="numbered-list" start="1"><li>每个节点只包含一个指针，即后继指针。</li></ol><ol id="e1097122-584e-4332-a6f6-449ddc227fd2" class="numbered-list" start="2"><li>单链表有两个特殊的节点，即首节点和尾节点。为什么特殊？用首节点地址表示整条链表，尾节点的后继指针指向空地址null。</li></ol><ol id="8e9765a8-ba5d-45bf-9d8a-406e118b7c71" class="numbered-list" start="3"><li>性能特点：插入和删除节点的时间复杂度为O（1），查找的时间复杂度为O(n)。</li></ol></li></ol><ol id="80f441be-f14f-4536-b8f0-fdc7c6333c29" class="numbered-list" start="2"><li>循环链表<ol id="d92017a6-8ccb-4f31-a977-38b7948f1a95" class="numbered-list" start="1"><li>除了尾节点的后继指针指向首节点的地址外均与单链表一致。</li></ol><ol id="157faa0d-e943-446e-832d-dc4f32945b5e" class="numbered-list" start="2"><li>适用于存储有循环特点的数据，比如约瑟夫问题。</li></ol></li></ol><ol id="dc966d85-708f-4010-844c-54f97ffd825d" class="numbered-list" start="3"><li>双向链表<ol id="4cc65f2a-44b7-437c-b27d-1f90bd6ad4ab" class="numbered-list" start="1"><li>节点除了存储数据外，还有两个指针分别指向前一个节点地址（前驱指针prev）和下一个节点地址（后继指针next）。</li></ol><ol id="aa45e575-fc56-4821-a361-07dfe5fe6e9b" class="numbered-list" start="2"><li>首节点的前驱指针prev和尾节点的后继指针均指向空地址。</li></ol><ul id="93a5ab4d-3514-4a72-9b6e-b0f55547e5e3" class="toggle"><li><details open=""><summary>性能特点：</summary><p id="25a81afa-ef60-4739-9e60-7e71abdd6097" class="">和单链表相比，存储相同的数据，需要消耗更多的存储空间。</p><p id="1f10bf19-c475-4557-bcd0-7d4109ebd6a0" class="">插入、删除操作比单链表效率更高O(1)级别。以删除操作为例，删除操作分为2种情况：给定数据值删除对应节点和给定节点地址删除节点。对于前一种情况，单链表和双向链表都需要从头到尾进行遍历从而找到对应节点进行删除，时间复杂度为O(n)。对于第二种情况，要进行删除操作必须找到前驱节点，单链表需要从头到尾进行遍历直到p-&gt;next = q，时间复杂度为O(n)，而双向链表可以直接找到前驱节点，时间复杂度为O(1)。</p><p id="02c3ad1a-0315-438e-8708-5aa403a12d20" class="">对于一个有序链表，双向链表的按值查询效率要比单链表高一些。因为我们可以记录上次查找的位置p，每一次查询时，根据要查找的值与p的大小关系，决定是往前还是往后查找，所以平均只需要查找一半的数据。</p></details></li></ul></li></ol><ol id="d0d89c60-5ef8-4ac5-822c-813ee850934b" class="numbered-list" start="4"><li>双向循环链表：首节点的前驱指针指向尾节点，尾节点的后继指针指向首节点。</li></ol><h2 id="ffc83bc8-881b-4465-884d-d1eb8595fdda" class="">选择数组还是链表？</h2><ol id="aca86509-0a53-44aa-8615-3c1957568978" class="numbered-list" start="1"><li>插入、删除和随机访问的时间复杂度<ol id="08013e07-1d11-403f-94a1-2d464dfbfbfb" class="numbered-list" start="1"><li>数组：插入、删除的时间复杂度是O(n)，随机访问的时间复杂度是O(1)。</li></ol><ol id="e5dec19c-3ae6-4c48-9100-4383616a8c12" class="numbered-list" start="2"><li>链表：插入、删除的时间复杂度是O(1)，随机访问的时间复杂端是O(n)。</li></ol></li></ol><ol id="238984e7-9d8c-43f3-a41b-1fe515236079" class="numbered-list" start="2"><li>数组缺点<ol id="b131a494-1da3-4a9a-a47a-1b2e112b4b0e" class="numbered-list" start="1"><li>若申请内存空间很大，比如100M，但若内存空间没有100M的连续空间时，则会申请失败，尽管内存可用空间超过100M。</li></ol><ol id="b2fe363d-b642-40b3-b91c-77bc0873d834" class="numbered-list" start="2"><li>大小固定，若存储空间不足，需进行扩容，一旦扩容就要进行数据复制，而这时非常费时的。</li></ol></li></ol><ol id="7ad53799-b18b-4010-a65b-0d8be7fbcbc0" class="numbered-list" start="3"><li>链表缺点<ol id="6490a497-01a6-4a2a-8c8a-895a53258ec0" class="numbered-list" start="1"><li>内存空间消耗更大，因为需要额外的空间存储指针信息。</li></ol><ol id="f89af230-c660-4d5e-8862-327ab2303059" class="numbered-list" start="2"><li>对链表进行频繁的插入和删除操作，会导致频繁的内存申请和释放，容易造成内存碎片，如果是Java语言，还可能会造成频繁的GC（自动垃圾回收器）操作。</li></ol></li></ol><ol id="20e1066b-6de8-4f5d-a30b-61f8a2499c38" class="numbered-list" start="4"><li>如何选择？</li></ol><p id="ba174ef1-e6a6-4bb2-852d-1750ff05c440" class="">数组简单易用，在实现上使用连续的内存空间，可以借助CPU的缓冲机制预读数组中的数据，所以访问效率更高，而链表在内存中并不是连续存储，所以对CPU缓存不友好，没办法预读。</p><p id="c8afe11f-76ec-4074-983c-5148c7551848" class="">如果代码对内存的使用非常苛刻，那数组就更适合。</p><p id="869e04f6-0112-47b5-ba31-838b231849fb" class="">
+</p><h3 id="20541918-7a03-4bbb-b1f8-cf4b985ee0c1" class="">小题</h3><ul id="7cfa9d29-925e-47c4-aec9-66d49e707a23" class="toggle"><li><details open=""><summary>基于链表实现 LRU 缓存淘汰算法</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="38b2d868-150b-4019-9499-f6263c62f1bd"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">利用双向链表prev的引用，高效率把查找的节点移到第一位。</div></figure><pre id="6887ff46-73da-4a58-ba64-378385a15c06" class="code"><code>function Chain(prev, val, next) {
+  this.prev = prev
+  this.val = val
+  this.next = next
+}
+
+const mockData = (len = 10) =&gt; {
+  let i = 0
+  let result = null
+  let cur = null
+
+  while(i &lt; len) {
+    if (!result) {
+      const data = new Chain(null, i, null)
+      result = data
+      cur = data
+    } else {
+      const data = new Chain(cur, i, null)
+      cur.next = data
+      cur = data
+    }
+
+    i++
+  }
+
+  return result
+}
+
+function lru(val, data) {
+  let cur = data
+
+  while(cur.next) {
+    if (cur.val === val) {
+      let prev = cur.prev
+      let next = cur.next
+
+      // 移出cur
+      prev.next = next
+      next.prev = prev
+
+      // 移到首位
+      cur.next = data
+      cur.prev = null
+
+      break;
+    }
+
+    cur = cur.next
+  }
+
+  return cur
+}
+
+lru(5, mockData())</code></pre></details></li></ul><ul id="f36d88fd-98e6-4c1d-942d-be2d461435d0" class="toggle"><li><details open=""><summary>单链表回文算法</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="2f539370-33b7-4751-a282-b8c34eb01f4b"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">构造正向链和反向链，双指针遍历。</div></figure></details></li></ul><ul id="487ee139-d3f4-4d63-9c61-bdf04c2266e2" class="toggle"><li><details open=""><summary>判断环形链表</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="62b79909-d3d0-48ee-b8d2-0e0581c8f551"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">标记出现过的节点，如果节点的next被标记过，那么就是环形链表，复杂度O(n)</div></figure><pre id="c25e9dbb-da7a-4652-a7dd-e9ba890e993a" class="code"><code>var hasCycle = function(head) {
+    let current = head
+
+    while(current) {
+        if (current.flag) return true
+
+				// 标记出现过的节点
+        current.flag = true
+        current = current.next
+    }
+
+    return false
+};</code></pre></details></li></ul><ul id="c3d6f609-5e77-4cbf-a62d-ba2432821f5c" class="toggle"><li><details open=""><summary>单链表反转</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="aa37aa06-e199-4af5-a3d2-5c210412b10d"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">[0]→[1]→[2]→[3]→[4]→[5] 
+从0开始, 假设Node0;  
+cur标记Node0.next;  
+pre标记Node0; 
+mark标记Node0.next.next
+
+cur.next  → pre
+pre → cur
+cur → mark</div></figure><pre id="7cc2eb15-c73c-4d54-8c49-4dfc6911909d" class="code"><code>var reverse = function(head) {
+    let cur = head.next
+
+    if (!cur) return head
+
+    let pre = null
+    let mark = null
+
+    pre = head
+    pre.next = null
+
+    while(true) {
+        mark = cur.next;
+
+        cur.next = pre
+
+        pre = cur
+
+        if (!mark) break;
+
+        cur = mark
+    }
+
+    return cur
+}</code></pre><p id="ac73d80f-2586-4a56-8f1c-83cab8e6b399" class="">
+</p></details></li></ul><ul id="fde519bd-db17-430b-af1e-19dc798d94f7" class="toggle"><li><details open=""><summary>合并两个有序链表</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="50f0c64b-957d-48b4-90b8-be1465402c8b"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">输入：1-&gt;2-&gt;4, 1-&gt;3-&gt;4
+输出：1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4</div></figure><pre id="8b7746e1-160d-40b6-9676-12f301144040" class="code"><code>var mergeTwoLists = function(l1, l2) {
+    if (!l1) return l2
+    if (!l2) return l1
+
+    if (l1.val &lt; l2.val) {
+        l1.next = mergeTwoLists(l1.next, l2)
+        return l1
+    } else {
+        l2.next = mergeTwoLists(l1, l2.next)
+        return l2
+    }
+};</code></pre></details></li></ul><p id="412a7da4-679f-4526-a46d-699324903145" class="">
+</p></div></article></body></html>

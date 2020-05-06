@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>HTTPS</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>React Reconciler</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,5 +619,72 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="11a4f7fd-e8ed-4ae8-8611-f70a0f377161" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">✨</span></div><h1 class="page-title">HTTPS</h1></header><div class="page-body"><h2 id="5e462a8d-6d45-4bac-9448-290fe56c839a" class="">工作原理</h2><p id="709454f7-72a3-4615-805d-59cce2262d80" class="">
+</style></head><body><article id="6c22692b-b4ce-4c7a-b883-8c0722267da8" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🎏</span></div><h1 class="page-title">React Reconciler</h1></header><div class="page-body"><p id="c8dae9ea-5522-40cd-b064-deee4f129061" class="">
+</p><figure id="b341d1f9-a9f0-4db1-95f5-0e0ce9484e1d" class="image"><a href="React%20Reconciler/Untitled.png"><img style="width:1548px" src="React%20Reconciler/Untitled.png"/></a></figure><p id="cd00d8cb-0676-40e5-a4a6-664d2e81f987" class="">
+</p><p id="d907066e-b682-48a6-af91-fdf8d1647ba5" class="">
+</p><p id="43b1b36d-3f0e-4bac-a2f9-ee0497f467a4" class="">
+</p><p id="b4d83d41-e225-493e-85d5-bcad32a012d3" class="">
+</p><blockquote id="f72885f5-a795-4cb9-9531-2d50716622e5" class="">在<code>React v16</code>版本之前，<code>React</code>使用的是<code>Stack Reconciler</code>，顾名思义，在我们调用<code>setState</code>时，<code>React</code>会遍历应用的所有节点，更新<code>State</code>和<code>Props</code>，调用<code>LifeCycle Function</code>，<code>Diff</code>，计算更新，最后再更新<code>DOM</code>。整个过程一气呵成，不能被打断。导致大量同步任务阻塞了浏览器的UI渲染。默认情况下，JS执行，UI渲染都是互斥的运行在浏览器的主线程当中。倘若JS执行占用主线程超过16ms，就会出现掉帧的情况。</blockquote><figure id="5b89b7c3-17c0-40d6-8465-f6e4527a1b06" class="image"><a href="React%20Reconciler/WX20200407-1401372x.png"><img style="width:1744px" src="React%20Reconciler/WX20200407-1401372x.png"/></a></figure><figure id="7388881b-ed86-446e-8ba8-50f0fa06e54f" class="image"><a href="React%20Reconciler/Untitled%201.png"><img style="width:2560px" src="React%20Reconciler/Untitled%201.png"/></a></figure><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="a503b49f-82ef-4243-a0d7-e5568971df30"><div style="font-size:1.5em"><span class="icon">😳</span></div><div style="width:100%">旧版的React通过递归的方式遍历树🌲，使用的是JS引擎的<code>Call Stack</code>，它会一直执行，直到空栈。React团队针对这一问题，研究出了<code>Fiber</code>即<code>Fiber Reconciler</code></div></figure><h2 id="3d23d713-0e37-4b0a-b671-feccbf1cee26" class=""><strong>Fiber Reconciler</strong></h2><p id="99acdac6-0158-48ae-aa72-aa774486ed60" class="">解决主线程长时间被占用这一问题的基本思路就是<code>Time-slicing</code>，时间分片是将大计算量的任务，分割成几个片段去完成。也就是说完成一个片段之后，将控制权交还给浏览器，让浏览器调度各线程工作。等浏览器完成工作之后，再继续完成下一个片段。</p><figure id="6c9138b3-0cda-4cc2-b4a6-a78c49fec9d4" class="image"><a href="React%20Reconciler/WX20200407-1402402x.png"><img style="width:1696px" src="React%20Reconciler/WX20200407-1402402x.png"/></a></figure><p id="ddcceb3d-561d-446a-acbd-2e332389dd7a" class="">
+</p><p id="82438217-33d5-43fb-a5d5-7a17eb195290" class="">要实现暂停遍历并阻止堆栈增长，可以使用单链表树遍历算法。</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="65911c81-5c41-4b7f-aaa5-acda792e6792"><div style="font-size:1.5em"><span class="icon">❓</span></div><div style="width:100%">为什么递归的方式不利于暂停遍历
+调用栈深，可以暂停，但是信息少，不利于恢复调用栈。</div></figure><h3 id="c03ef779-c55c-48e8-9400-c231ab69eb31" class="">Fiber 数据结构</h3><figure id="ca49b8a1-c7eb-4f09-a3b6-6d823deab1fb" class="image"><a href="React%20Reconciler/WX20200407-1741272x.png"><img style="width:192px" src="React%20Reconciler/WX20200407-1741272x.png"/></a></figure><ul id="36c24f71-e5d3-4b2e-a961-5582127a2534" class="bulleted-list"><li>stateNode — 引用实例</li></ul><ul id="0bd30644-4e76-4254-9e33-4fb9586ff4c3" class="bulleted-list"><li>child — 引用第一个子节点</li></ul><ul id="092bb6d7-4fb3-421f-8691-182914eb0d58" class="bulleted-list"><li>sibling — 引用第一个相邻节点</li></ul><ul id="8c8c8a27-2874-4554-9f95-472264c2e20b" class="bulleted-list"><li>return — 引用父节点</li></ul><p id="a2aba764-7921-46c6-936f-aeb7e1034316" class="">
+</p><figure id="e4468a54-8cf3-4904-ae5d-79797ecfd49f" class="image"><a href="React%20Reconciler/Untitled%202.png"><img style="width:536px" src="React%20Reconciler/Untitled%202.png"/></a></figure><p id="33c826d6-14d8-4d27-8858-865208470343" class="">用代码表示上图节点间的关系，比如<code>a1</code>下面有<code>b1、b2、b3</code></p><pre id="5bc36129-5f27-4dec-9667-e58c2ce3edda" class="code"><code>var a1 = { name: &#x27;a1&#x27;, render: () =&gt; [b1, b2, b3] }
+var b1 = { name: &#x27;b1&#x27;, render: () =&gt; [] }
+var b2 = { name: &#x27;b2&#x27;, render: () =&gt; [c1] }
+var b3 = { name: &#x27;b3&#x27;, render: () =&gt; [c2] }
+var c1 = { name: &#x27;c1&#x27;, render: () =&gt; [d1, d2] }
+var c2 = { name: &#x27;c2&#x27;, render: () =&gt; [] }
+var d1 = { name: &#x27;d1&#x27;, render: () =&gt; [] }
+var d2 = { name: &#x27;d2&#x27;, render: () =&gt; [] }</code></pre><p id="3e524f5a-be6e-49a4-b969-0d5f99953f78" class="">构建节点的数据结构, 如下所示</p><pre id="af8070aa-eb42-43fd-9d2a-29bd5d17ebd1" class="code"><code>function FiberNode(instance) {
+	this.stateNode = instance
+	this.return = null
+	this.sibling = null
+  this.child = null
+}</code></pre><p id="d2a32d7e-160f-4602-a946-1103c5e9ff8c" class="">创建a1节点的Fiber结构</p><pre id="f640d04a-0c96-43e4-8419-05a407479232" class="code"><code>function connect(parent, childList) {
+	parent.child = childList.reduceRigth((prev, current) =&gt; {
+		const fiberNode = new FiberNode(current)
+		fiberNode.sibling = prev
+		fiberNode.return = parent
+
+		return fiberNode
+	}, null)
+
+	return parent.child
+}
+
+var parent = new FiberNode(a1)
+var firstChild = connect(parent, a1.render())</code></pre><p id="1c861850-05a3-4ff4-a8fc-a135cc177ebc" class="">这样就完成了<code>a1</code> → <code>b1</code>，<code>b1</code>→<code>b2</code>→<code>b3</code>，以及<code>b1</code>、<code>b2</code>、<code>b3</code>都→<code>a1</code>的链表结构</p><p id="4dcd0988-1caa-4699-92ab-26f681d43bae" class="">最后完成walk</p><pre id="24aa2fb9-b5b6-4a3f-819d-f7f0064de27a" class="code"><code>function doWork(node) {
+	console.log(node.stateNode.name)
+	const childList = node.stateNode.render()
+
+	if (childList.length &gt; 0) {
+		return connect(node, childList)
+	}
+}
+
+function walk(root) {
+	let currentNode = root
+	
+	while(true) {
+		const child = doWork(currentNode)
+		
+		if (child) {
+			currentNode = child
+      continue
+		}
+
+		while(!currentNode.sibling) {
+			currentNode = currentNode.return
+      if (currentNode === root) {
+        return
+      }
+		}
+
+		currentNode = currentNode.sibling
+	}
+}
+
+walk(new FiberNode(a1))
+
+console log: &quot;a1&quot; &quot;b1&quot; &quot;b2&quot; &quot;c1&quot; &quot;d1&quot; &quot;d2&quot; &quot;b3&quot; &quot;c2&quot;</code></pre><figure id="ae66f384-ea60-48f3-9c7d-0b75e66eb65c"><a href="https://codepen.io/kailcc/pen/zYGgJVb" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">Fiber</div></div><div class="bookmark-href"><img src="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico" class="icon bookmark-icon"/>https://codepen.io/kailcc/pen/zYGgJVb</div></div><img src="https://s3-us-west-2.amazonaws.com/m.cdpn.io/screenshot-coming-soon-small.png" class="bookmark-image"/></a></figure><p id="3bfab2e7-d4d8-46b1-babd-049be3d90486" class="">
+</p><p id="f6648a7c-88cb-43ac-a16b-5fd0cbe60763" class="">
 </p></div></article></body></html>

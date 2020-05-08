@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>TCP</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>栈</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,14 +619,266 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="79f798e1-0f95-462e-98ac-62692fdcf62f" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🀄</span></div><h1 class="page-title">TCP</h1></header><div class="page-body"><p id="1449579e-8fa6-479a-869d-25e9da88903a" class="">
-</p><h2 id="76c9c73c-8587-4520-a3f7-4f46ec184180" class="">名次解释</h2><p id="5f179154-b5a0-44ea-8278-55977bb39c1d" class="">seq：序号</p><p id="7fa59b03-dffa-4c06-87c3-2f31b09ec0c4" class="">
-</p><p id="493ad809-4156-4754-b65a-766e666daf98" class="">
-</p><h3 id="85c309fd-4d6e-46a7-bc2e-f10845907450" class="">三次握手</h3><figure id="605c0362-912c-494c-b3aa-514197d6a925" class="image"><a href="TCP/Untitled.png"><img style="width:1377px" src="TCP/Untitled.png"/></a></figure><p id="24cc7813-470b-4387-b2e1-275de511b0db" class="">
-</p><p id="00c3e45a-58ef-4604-978a-4f3b97ab3d6a" class="">client  —-(syn)—→ server</p><p id="616816a6-512f-4f17-9b7f-a531c67b555b" class="">client ←—(syn + ack)— server</p><p id="fcc21256-470b-4e12-a999-656e73c1c1e5" class="">client ——(ack)———→ server</p><p id="6bae14da-fe6d-4c9f-9158-70766dc803f5" class="">
-</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="d5d8a9b4-9804-4ace-9137-5edaf665ce3a"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">ack：ack = seq + len（包的大小）
-让发送方知道接收方接受时有没有丢包的情况。</div></figure><p id="bb9b2566-2e0d-45e4-b36e-ec9ede0aca2b" class="">
-</p><h3 id="ea306973-b577-4658-9573-31f4284a0a64" class="">四次挥手</h3><p id="4633a3e8-6ec4-4410-88fd-c664ebbe15a0" class="">client ——(fin)——→ server</p><p id="6c013be1-e4c7-4a5f-81ad-b73f1094251b" class="">client ←—(ack)——- server</p><p id="195b1680-23c9-4092-b369-c9d2bb6b746b" class="">client ←—(fin)——- server</p><p id="a861377d-2f3f-4f6c-a2c1-e0de36f7a47e" class="">client ——(ack)——→ server</p><p id="e4ff0286-9475-4db4-87ee-48977fa2f5f7" class="">
-</p><p id="5fe20ce1-fc58-4c1b-bac7-fb61be063742" class="">
-</p><p id="c0a33b04-d987-4d3c-a2c8-8cad34362fa7" class="">
+</style></head><body><article id="186c3820-773a-468b-88b0-27020fe115f2" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🌆</span></div><h1 class="page-title">栈</h1></header><div class="page-body"><h2 id="8549c671-4243-4ceb-ae3f-c033507d2843" class="">什么是栈？</h2><ol id="fa7dc953-f56d-46e5-be9d-3af4cfc10190" class="numbered-list" start="1"><li>后进者先出，先进者后出，这就是典型的“栈”结构。</li></ol><p id="ebeaff66-7c3a-4375-a038-69f591eb295c" class="">
+</p><ol id="430d5787-9b10-4588-b0b7-b9c343e4b058" class="numbered-list" start="1"><li>从栈的操作特性来看，是一种“操作受限”的线性表，只允许在端插入和删除数据。</li></ol><h2 id="1d56737b-da28-4d27-aac6-907b442dd1ae" class="">为什么需要栈？</h2><ol id="e4d2b2e1-facb-433b-9a75-998f82228e38" class="numbered-list" start="1"><li>栈是一种操作受限的数据结构，其操作特性用数组和链表均可实现。</li></ol><ol id="0591d710-f9a5-47a4-9769-7ef157a8f11c" class="numbered-list" start="2"><li>但，任何数据结构都是对特定应用场景的抽象，数组和链表虽然使用起来更加灵活，但却暴露了几乎所有的操作，难免会引发错误操作的风险。</li></ol><ol id="1599615e-ced8-41d1-b14a-b98049f67ad9" class="numbered-list" start="3"><li>所以，当某个数据集合只涉及在某端插入和删除数据，且满足后进者先出，先进者后出的操作特性时，我们应该首选栈这种数据结构。</li></ol><p id="349bbea6-5608-45bd-81f9-a3d704f8e851" class="">
+</p><ul id="834441ea-ed12-4b7c-afb7-edadec972795" class="toggle"><li><details open=""><summary>结合图来理解 3+5*8-6 这个表达式的计算过程</summary><figure id="a90f31bd-9116-4ade-ac73-17faac240db5" class="image"><a href="Untitled%20186c3820773a468b88b027020fe115f2/Untitled.png"><img style="width:1142px" src="Untitled%20186c3820773a468b88b027020fe115f2/Untitled.png"/></a></figure><pre id="f1901c22-34bc-40c6-a9b5-e052d2947548" class="code"><code>function Stack() {
+	this.stack = []
+}
+
+Stack.prototype.push = function(item) {
+	return this.stack.unshift(item)
+}
+
+Stack.prototype.pop = function(item) {
+	return this.stack.shift()
+}
+
+Stack.prototype.top = function(item) {
+  return this.stack[0]
+}
+
+Stack.prototype.len = function() {
+  return this.stack.length
+}
+
+function calc(expression) {
+  const logic = [&quot;+&quot;,&quot;-&quot;,&quot;*&quot;,&quot;/&quot;]
+  const number = [0,1,2,3,4,5,6,7,8,9]
+	const logicLevelMap = new Map([
+		[&#x27;+&#x27;, 1],
+		[&#x27;-&#x27;, 1],
+		[&#x27;*&#x27;, 2],
+		[&#x27;/&#x27;, 2],
+	])
+
+	const numStack = new Stack()
+	const logicStack = new Stack()
+
+	const ls = expression.split(&#x27; &#x27;)
+	let idx = 0
+	let cur = undefined
+
+	while(cur = ls[idx]) {
+		if (number.includes(Number(cur))) {
+			numStack.push(cur)
+		} else if(logic.includes(cur)) {
+      const curLevel = logicLevelMap.get(cur)
+      const stackTopLevel = logicLevelMap.get(logicStack.top()) || 0
+
+      if (curLevel &gt; stackTopLevel) {
+        logicStack.push(cur)
+      } else {
+				const val = cleanStack(numStack, logicStack)
+        numStack.push(val)
+        logicStack.push(cur)
+      }
+    }
+
+    if (idx === ls.length - 1) {
+      return cleanStack(numStack, logicStack)
+    }
+
+    idx++
+	}
+}
+
+function cleanStack(numStack, logicStack) {
+  const [ right, left ] = [ numStack.pop(), numStack.pop() ]
+  const lic = logicStack.pop()
+  let val = eval(`${left} ${lic} ${right}`)
+
+  if (logicStack.len() &gt; 0) {
+    numStack.push(val)
+    val = cleanStack(numStack, logicStack)
+  }
+
+  return val
+}
+
+
+console.log(calc(`3 + 5 * 8 - 6`))</code></pre></details></li></ul><ul id="56d43035-cf50-47be-b3df-65a3907c609f" class="toggle"><li><details open=""><summary>有效的括号</summary><figure id="297cd50c-6937-4336-be1e-5cf55a5cf354" class="image"><a href="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%201.png"><img style="width:944px" src="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%201.png"/></a></figure><pre id="0f549881-9d8e-49ed-a721-4314d2f4dd83" class="code"><code>/**
+ * @param {string} s
+ * @return {boolean}
+ */
+var isValid = function(s) {
+    const stack = []
+    const open = [&#x27;(&#x27;, &#x27;{&#x27;, &#x27;[&#x27;]
+    const close = [&#x27;)&#x27;, &#x27;}&#x27;, &#x27;]&#x27;]
+    const relation = {
+        [close[0]]: open[0],
+        [close[1]]: open[1],
+        [close[2]]: open[2],
+    }
+
+    const ls = s.split(&#x27;&#x27;)
+    let idx = 0
+    let cur = undefined
+
+    while(cur = ls[idx]) {
+        if (!stack.length &amp;&amp; close.includes(cur)) {
+            return false
+        }
+
+        if (open.includes(cur)) {
+            stack.unshift(cur)
+        } else {
+            const v = relation[cur] === stack.shift()
+
+            if (!v) return false
+        }
+
+        idx++
+    }
+
+    if (stack.length) return false
+
+    return true
+};</code></pre><p id="05df4597-eec3-4627-9da5-774e51c0bcb8" class="">
+</p></details></li></ul><ul id="e831e162-1f3b-43ed-9a3a-de5673e9098f" class="toggle"><li><details open=""><summary>最小栈</summary><figure id="c3e320ae-4b5a-42cb-8f88-6909ec9614f9" class="image"><a href="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%202.png"><img style="width:904px" src="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%202.png"/></a></figure><pre id="f663b60c-4455-414b-a60b-3b933fe46ebb" class="code"><code>/**
+ * initialize your data structure here.
+ */
+var MinStack = function() {
+    this.stack = []
+    this.min = []
+};
+
+/** 
+ * @param {number} x
+ * @return {void}
+ */
+MinStack.prototype.push = function(x) {
+    this.stack.unshift(x)
+
+    if (!this.min.length) {
+        this.min.push(x)
+    } else {
+        let add = false
+
+        for(let i = 0; i &lt; this.min.length; i++) {
+            if (x &lt; this.min[i]) {
+                add = true
+                this.min.splice(i, 0, x)
+                break
+            }
+        }
+
+        if (!add) this.min.push(x)
+    }
+};
+
+/**
+ * @return {void}
+ */
+MinStack.prototype.pop = function() {
+    const val = this.stack.shift()
+
+    if (val !== undefined &amp;&amp; val !== null) {
+        for(let i = 0; i &lt; this.min.length; i++) {
+            if (val === this.min[i]) {
+                this.min.splice(i, 1)
+                break
+            }
+        }
+    }
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.top = function() {
+    return this.stack[0]
+};
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.getMin = function() {
+    return this.min[0]
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * var obj = new MinStack()
+ * obj.push(x)
+ * obj.pop()
+ * var param_3 = obj.top()
+ * var param_4 = obj.getMin()
+ */</code></pre><p id="48db429d-aeec-47f4-8f2c-604f347dab97" class="">
+</p></details></li></ul><ul id="a97e4f18-9b9d-4491-9639-0b377339d932" class="toggle"><li><details open=""><summary>用栈实现队列</summary><pre id="07cbbab7-cd74-488b-9172-a16a36711417" class="code"><code>/**
+ * Initialize your data structure here.
+ */
+var MyQueue = function() {
+    this.queue = []
+};
+
+/**
+ * Push element x to the back of queue. 
+ * @param {number} x
+ * @return {void}
+ */
+MyQueue.prototype.push = function(x) {
+    this.queue.push(x)
+};
+
+/**
+ * Removes the element from in front of queue and returns that element.
+ * @return {number}
+ */
+MyQueue.prototype.pop = function() {
+    return this.queue.shift()
+};
+
+/**
+ * Get the front element.
+ * @return {number}
+ */
+MyQueue.prototype.peek = function() {
+    return this.queue[0]
+};
+
+/**
+ * Returns whether the queue is empty.
+ * @return {boolean}
+ */
+MyQueue.prototype.empty = function() {
+    return this.queue.length === 0
+};
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * var obj = new MyQueue()
+ * obj.push(x)
+ * var param_2 = obj.pop()
+ * var param_3 = obj.peek()
+ * var param_4 = obj.empty()
+ */</code></pre></details></li></ul><ul id="5a06b2f2-670c-43d8-b3a6-2051e2ed8096" class="toggle"><li><details open=""><summary>比较含退格的字符串</summary><figure id="34ed1254-b009-4d65-9239-1b335a6e14af" class="image"><a href="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%203.png"><img style="width:946px" src="Untitled%20186c3820773a468b88b027020fe115f2/Untitled%203.png"/></a></figure><pre id="177c6d43-9ed8-4391-97ae-43cc5418919e" class="code"><code>/**
+ * @param {string} S
+ * @param {string} T
+ * @return {boolean}
+ */
+var backspaceCompare = function(S, T) {
+    const ls1 = S.split(&#x27;&#x27;)
+    const ls2 = T.split(&#x27;&#x27;)
+
+    const calcVal = (ls) =&gt; {
+        this.stack = []
+        let idx = 0
+        let cur = 0
+        const pop = &#x27;#&#x27;
+
+        while(cur = ls[idx]) {
+            if (pop === cur) {
+                this.stack.shift()
+            } else {
+                this.stack.unshift(cur)
+            }
+
+            idx++
+        }
+
+        return this.stack.join(&#x27;&#x27;)
+    }
+
+    return calcVal(ls1) === calcVal(ls2)
+};</code></pre></details></li></ul><p id="06baf8af-1fc9-4c2c-ac2a-007719685334" class="">
 </p></div></article></body></html>

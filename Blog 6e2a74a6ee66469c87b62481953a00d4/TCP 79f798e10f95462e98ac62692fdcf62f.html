@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>JS考题</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>TCP</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,11 +619,14 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="9afb8b56-0f1c-416d-9993-fc4c37ac2afb" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🧴</span></div><h1 class="page-title">JS考题</h1></header><div class="page-body"><p id="b082e206-630e-4a3a-b459-1e615b799900" class="">下面会输出什么</p><pre id="fcd260ec-9337-4d34-a081-4d329f8d17ca" class="code"><code>var y = 1;
-
-if (function f(){}) {
-  y += typeof f;
-}
-
-console.log(y);</code></pre><ul id="b600ca43-302d-4d7c-92bd-b0570ace87fe" class="toggle"><li><details open=""><summary>解</summary><p id="d9a5fc16-c986-40d6-a0ea-11e852f9df15" class="">输出是&quot;1undefined&quot;， <code>if</code>条件语句使用<code>eval</code>进行计算，因此<code>eval(function f(){})</code></p><p id="361ba819-ad4d-46d7-bb90-a28476daea07" class="">会返回<code>f(){}</code>,当作表达式执行，所以<code>typeof f === undefined</code></p><p id="97e77947-96cb-494d-a9eb-95f8ff83334f" class="">
-</p></details></li></ul></div></article></body></html>
+</style></head><body><article id="79f798e1-0f95-462e-98ac-62692fdcf62f" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🀄</span></div><h1 class="page-title">TCP</h1></header><div class="page-body"><p id="1449579e-8fa6-479a-869d-25e9da88903a" class="">
+</p><h2 id="76c9c73c-8587-4520-a3f7-4f46ec184180" class="">名次解释</h2><p id="5f179154-b5a0-44ea-8278-55977bb39c1d" class="">seq：序号</p><p id="7fa59b03-dffa-4c06-87c3-2f31b09ec0c4" class="">
+</p><p id="493ad809-4156-4754-b65a-766e666daf98" class="">
+</p><h3 id="85c309fd-4d6e-46a7-bc2e-f10845907450" class="">三次握手</h3><figure id="605c0362-912c-494c-b3aa-514197d6a925" class="image"><a href="TCP%2079f798e10f95462e98ac62692fdcf62f/Untitled.png"><img style="width:1377px" src="TCP%2079f798e10f95462e98ac62692fdcf62f/Untitled.png"/></a></figure><p id="24cc7813-470b-4387-b2e1-275de511b0db" class="">
+</p><p id="00c3e45a-58ef-4604-978a-4f3b97ab3d6a" class="">client  —-(syn)—→ server</p><p id="616816a6-512f-4f17-9b7f-a531c67b555b" class="">client ←—(syn + ack)— server</p><p id="fcc21256-470b-4e12-a999-656e73c1c1e5" class="">client ——(ack)———→ server</p><p id="6bae14da-fe6d-4c9f-9158-70766dc803f5" class="">
+</p><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="d5d8a9b4-9804-4ace-9137-5edaf665ce3a"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">ack：ack = seq + len（包的大小）
+让发送方知道接收方接受时有没有丢包的情况。</div></figure><p id="bb9b2566-2e0d-45e4-b36e-ec9ede0aca2b" class="">
+</p><h3 id="ea306973-b577-4658-9573-31f4284a0a64" class="">四次挥手</h3><p id="4633a3e8-6ec4-4410-88fd-c664ebbe15a0" class="">client ——(fin)——→ server</p><p id="6c013be1-e4c7-4a5f-81ad-b73f1094251b" class="">client ←—(ack)——- server</p><p id="195b1680-23c9-4092-b369-c9d2bb6b746b" class="">client ←—(fin)——- server</p><p id="a861377d-2f3f-4f6c-a2c1-e0de36f7a47e" class="">client ——(ack)——→ server</p><p id="e4ff0286-9475-4db4-87ee-48977fa2f5f7" class="">
+</p><p id="5fe20ce1-fc58-4c1b-bac7-fb61be063742" class="">
+</p><p id="c0a33b04-d987-4d3c-a2c8-8cad34362fa7" class="">
+</p></div></article></body></html>

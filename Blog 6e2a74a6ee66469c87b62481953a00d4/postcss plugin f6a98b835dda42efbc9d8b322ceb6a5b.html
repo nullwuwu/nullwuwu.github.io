@@ -631,9 +631,9 @@ blockquote {
 var reg = /url\(([&#x27;&quot;])?(https?:\/\/([^\/]+).+)\1\);?/;
 var suffixMap = new Map([
   // 阿里云
-  [&quot;cdn.poizon.com&quot;, &quot;?x-oss-process=image/format,webp&quot;],
+  [&quot;cdn.aliyun.com&quot;, &quot;?x-oss-process=image/format,webp&quot;],
   // 七牛云
-  [&quot;du.hupucdn.com&quot;, &quot;?imageView2/0/format/webp&quot;]
+  [&quot;du.qiniuyun.com&quot;, &quot;?imageView2/0/format/webp&quot;]
 ]);
 
 module.exports = postcss.plugin(&quot;postcss-webp&quot;, function(opts) {

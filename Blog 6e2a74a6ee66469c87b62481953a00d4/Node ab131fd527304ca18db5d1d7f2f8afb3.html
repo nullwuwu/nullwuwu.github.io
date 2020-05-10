@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>记一次线上环境内存报警</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Node性能调优</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,7 +619,105 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="60720e1f-dc05-476f-9acf-aae069c089ca" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🏖️</span></div><h1 class="page-title">记一次线上环境内存报警</h1></header><div class="page-body"><p id="169ec548-1d5b-4e47-a241-41952fb7b419" class="">
-</p><ul id="3a7cc30d-a3b9-4514-9bb4-5106a3266088" class="toggle"><li><details open=""><summary>现象：接入了服务监控之后，发现内存占用率99%</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="d19760b8-2e97-4b03-892d-003a85d6d358"><div style="font-size:1.5em"><span class="icon">🐞</span></div><div style="width:100%"><code>$ top</code> 命令查看机器状态
-发现pm2 log占用了大量内存（80%），了解到linux服务器读写大存储文件是会放在内存中，因为服务一直在打log、大文件一直在被读写，导致内存不得释放。</div></figure><p id="c8c5c2f9-b550-4302-9610-d664aa3e9555" class="">先清空了日志缓存，然后对日志文件进行管理，定时定量去分割日志文件。</p></details></li></ul><p id="cec6dd90-d1e4-4988-97dd-0aa6b72db431" class="">
-</p></div></article></body></html>
+</style></head><body><article id="ab131fd5-2730-4ca1-8db5-d1d7f2f8afb3" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🏣</span></div><h1 class="page-title">Node性能调优</h1></header><div class="page-body"><h1 id="0d6a5c6f-370d-48d4-9862-f4df8660ecd3" class="">服务压测</h1><h3 id="fac77dc6-78a3-4520-b4f7-a7b3cc5e56d4" class="">压测工具</h3><ul id="911273c0-bbe3-4533-a9fc-f0cb9d445740" class="bulleted-list"><li>ab(apache bench) </li></ul><ul id="e076ec11-65da-4f98-ab25-60427fbde564" class="bulleted-list"><li>webbench</li></ul><pre id="20670ad1-32d6-4501-8479-7f3337a5c07f" class="code"><code>// -c 200: 200并发
+// -n 1800: 总共1800次请求
+$ ab -c 200 -n 1800 https://www.baidu.com/</code></pre><pre id="70a1e051-843c-488c-9ae3-ac72474d6931" class="code"><code>This is ApacheBench, Version 2.3 &lt;$Revision: 1843412 $&gt;
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking www.baidu.com (be patient)
+Completed 180 requests
+Completed 360 requests
+Completed 540 requests
+Completed 720 requests
+Completed 900 requests
+Completed 1080 requests
+Completed 1260 requests
+Completed 1440 requests
+Completed 1620 requests
+Completed 1800 requests
+Finished 1800 requests
+
+
+Server Software:        BWS/1.1
+Server Hostname:        www.baidu.com
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.2,ECDHE-RSA-AES128-GCM-SHA256,2048,128
+Server Temp Key:        ECDH P-256 256 bits
+TLS Server Name:        www.baidu.com
+
+Document Path:          /
+Document Length:        227 bytes
+
+// 并发数
+Concurrency Level:      200
+// 测试总耗时
+Time taken for tests:   16.457 seconds
+// 完成数
+Complete requests:      1800
+// 失败数
+Failed requests:        0
+// 总字节量
+Total transferred:      1947341 bytes
+// 文档字节量 不包含http headers
+HTML transferred:       408600 bytes
+// QPS
+Requests per second:    109.37 [#/sec] (mean)
+// 平均响应耗时
+Time per request:       1828.600 [ms] (mean)
+// 并发平均响应耗时
+Time per request:       9.143 [ms] (mean, across all concurrent requests)
+// 传输速率 吞吐量
+Transfer rate:          115.55 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:       65 1228 398.5   1415    2913
+Processing:    14  461 396.8    232    1636
+Waiting:       13  357 312.2    186    1508
+Total:         93 1689 213.1   1652    3383
+
+Percentage of the requests served within a certain time (ms)
+  50%   1652
+  66%   1677
+  75%   1697
+  80%   1722
+  90%   1734
+  95%   1842
+  98%   2561
+  99%   2861
+ 100%   3383 (longest request)</code></pre><p id="5a1c0dc0-06a5-46b6-966a-06b09ea7f057" class="">
+</p><h3 id="8a2269c2-c29e-4be8-86a6-dfec58a05b50" class="">发现服务器性能瓶颈</h3><ul id="6b03909d-6ae6-4888-9227-a26e06724869" class="bulleted-list"><li>top： 查看cpu、memory</li></ul><ul id="00c410aa-fca9-49d1-ace0-5b4c28c7eea6" class="bulleted-list"><li>iostat： 查看i/o情况，硬盘读写</li></ul><ul id="602f1e1a-6ac2-43ae-9dfa-d8d28b31c4e3" class="bulleted-list"><li>其它情况，例如<code>Node</code>作为<code>BFF</code>层，所依赖的后端<code>qps</code>为300，那无论<code>node</code>服务有多少<code>qps</code>，整体服务的<code>qps</code>就为300.</li></ul><h1 id="7844a6bd-f91e-4846-96f2-8a9c3726e623" class="">性能分析</h1><p id="dbdb6f69-c04a-4319-bb22-a12737ead0d5" class="">工具：</p><ol id="f2dd4cd2-4635-49bb-bd19-36ae0f83c3d4" class="numbered-list" start="1"><li>profile<pre id="90ecffa3-107d-41b7-a937-c690ce50fce4" class="code"><code>// 启动服务
+$ NODE_ENV=production node --prof app.js
+
+// 压测
+$ ab -k -c 20 -n 250 &quot;http://localhost:3000/api&quot;
+
+// 解析node运行时文件 输出到 processed.txt
+node --prof-process isolate-0xnnnnnnnnnnnn-v8.log &gt; processed.txt</code></pre></li></ol><ol id="ff65d841-713f-46b8-a4a3-069082eb807b" class="numbered-list" start="2"><li>chrome dev-tool<pre id="0e5def4c-5986-44a9-bc37-bc06c634506f" class="code"><code>// 启动服务
+$ NODE_ENV=production node --inspect-brk app.js</code></pre><p id="6bee95ef-a0f1-42bc-b130-60d6ec968799" class="">打开<code>chrome</code>输入<code>chrome://inspect</code>，<code>Remote Target</code>找到<code>node</code>,打开之后有<code>Profiler</code>工具</p></li></ol><ol id="6ee8678f-3663-4bb6-b34f-3684a5416b6a" class="numbered-list" start="3"><li>clinic </li></ol><figure id="35855a13-a078-4829-bcaf-d77adc305043"><a href="https://clinicjs.org/" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title"></div></div><div class="bookmark-href"><img src="https://clinicjs.org/icons/icon-48x48.png?v=3a63180f1da0fe6b5b33b7b30e2dfd65" class="icon bookmark-icon"/>https://clinicjs.org/</div></div></a></figure><pre id="9c1c97c9-9d47-4339-bbc9-c79d4d4aa046" class="code"><code>const app = new Koa()
+
+const string = fs.readFileSync(__dirname + &#x27;/index.html&#x27;, &#x27;utf-8&#x27;)
+
+app.use(
+	mount(&#x27;/&#x27;, async (ctx) =&gt; {
+		ctx.body = string
+	})
+)</code></pre><p id="5108409a-8c12-415a-8b04-561b802bc41f" class="">分析发现把<code>html string</code>交给<code>koa body</code>处理，再经由<code>node</code>把<code>string</code>转换成<code>buffer</code>再交给底层的<code>C++</code>，导致性能损耗。</p><pre id="45ae0ebb-8bd9-4aae-81da-d3f16355e05e" class="code"><code>// 修改后
+const app = new Koa()
+
+const buffer = fs.readFileSync(__dirname + &#x27;/index.html&#x27;)
+
+app.use(
+	mount(&#x27;/&#x27;, async (ctx) =&gt; {
+		ctx.status = 200
+		// 告诉koa是html类型的body
+		ctx.type = &#x27;html&#x27;
+		ctx.body = buffer
+	})
+)</code></pre><p id="0f024124-8d8b-45c9-9d16-edb8a39e7777" class="">
+</p><h1 id="97d1d88f-a5c7-40f4-9378-23013203eb54" class="">性能优化</h1><ul id="3e24581c-3c78-467b-8a00-e01658c45778" class="bulleted-list"><li>代码性能优化<ul id="74d19041-b814-46a9-a6bf-51a8e645f96a" class="bulleted-list"><li>计算性能优化<ul id="7b69f588-f2e8-4ea4-a671-3a172a8f552b" class="bulleted-list"><li>减少不必要的计算</li></ul><ul id="0180ae99-523b-4e51-8e98-1862116b63a8" class="bulleted-list"><li>空间换时间</li></ul></li></ul><ul id="4000f4ab-4a67-4fde-b35c-21fbb4b578ed" class="bulleted-list"><li>提前计算，将程序服务阶段的计算，在程序启动阶段完成。</li></ul></li></ul><p id="98f550ea-2d43-491a-90c9-4cf17dda6e04" class=""><div class="indented"><ul id="0991d461-0fa7-4bd0-ba6e-9af7966dcbd0" class="bulleted-list"><li>内存优化<ul id="9421590b-8cdf-4f83-9d31-68c500f53aed" class="bulleted-list"><li>减少内存使用</li></ul><ul id="fb0e631d-ab5c-4c84-8ede-c8cefc226568" class="bulleted-list"><li>如果有内存泄露，会导致服务性能大大降低</li></ul></li></ul><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="96f68638-69cc-407d-b033-bb7f1ed9c489"><div style="font-size:1.5em"><span class="icon">💡</span></div><div style="width:100%">Node Buffer的内存分配策略
+<code>buffer &gt; 8kb</code>;  对应c++里的<code>new char[]</code>
+<code>buffer &lt; 8kb</code>;   <code>new 8kb char[]</code>，计算buffer所占用的空间，把<code>8kb</code>的<code>char[]</code>切一块给<code>buffer</code>，每次遇到 <code>&lt; 8kb</code>的 <code>buffer</code> 时，都会切一块，以此类推。如果剩余空间不足以给<code>buffer</code>，那么就会重新<code>new 8kb char[]</code>。如果<code>buffer</code>被释放，那么<code>buffer</code>在<code>char[]</code>中占用的空间，就会腾出来，被重新利用。
+类似于：池
+优点：减少内存分配销毁成本、高效复用内存</div></figure></div></p><p id="95d16ae6-6ced-413e-ab8a-5152a85f43a4" class=""><div class="indented"><ul id="59c38c54-0201-436b-ad21-ae1f9fbbffc5" class="bulleted-list"><li>C++ Addons</li></ul></div></p></div></article></body></html>

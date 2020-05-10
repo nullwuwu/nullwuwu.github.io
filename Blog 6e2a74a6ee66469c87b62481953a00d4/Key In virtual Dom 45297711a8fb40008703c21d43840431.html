@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>记一次线上环境内存报警</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Key In virtual-Dom</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,7 +619,5 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="60720e1f-dc05-476f-9acf-aae069c089ca" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🏖️</span></div><h1 class="page-title">记一次线上环境内存报警</h1></header><div class="page-body"><p id="169ec548-1d5b-4e47-a241-41952fb7b419" class="">
-</p><ul id="3a7cc30d-a3b9-4514-9bb4-5106a3266088" class="toggle"><li><details open=""><summary>现象：接入了服务监控之后，发现内存占用率99%</summary><figure class="block-color-gray_background callout" style="white-space:pre-wrap;display:flex" id="d19760b8-2e97-4b03-892d-003a85d6d358"><div style="font-size:1.5em"><span class="icon">🐞</span></div><div style="width:100%"><code>$ top</code> 命令查看机器状态
-发现pm2 log占用了大量内存（80%），了解到linux服务器读写大存储文件是会放在内存中，因为服务一直在打log、大文件一直在被读写，导致内存不得释放。</div></figure><p id="c8c5c2f9-b550-4302-9610-d664aa3e9555" class="">先清空了日志缓存，然后对日志文件进行管理，定时定量去分割日志文件。</p></details></li></ul><p id="cec6dd90-d1e4-4988-97dd-0aa6b72db431" class="">
+</style></head><body><article id="45297711-a8fb-4000-8703-c21d43840431" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">☄️</span></div><h1 class="page-title">Key In virtual-Dom</h1></header><div class="page-body"><p id="23b4c45b-2b93-4107-bd41-4e1d36b96143" class="">无论是<code>Vue</code>还是<code>React</code>在处理列表数据时，都建议传<code>key</code>，why?</p><p id="a4a4fcf5-8978-419b-ad03-61c3efd0e84a" class="">毫无疑问这是一种性能优化，<code>virtual-Dom</code>是多叉树结构，在框架执行更新操作时，会需要对比新旧<code>virtual-Dom</code>树，找到差异点，增量更新，但是在长列表的场景下，父节点下面会有N个节点，节点数量过多则性能消耗不可控制，唯一的<code>key</code>，在对比节点是优先对比<code>key</code>，<code>key</code>相同则继续比较节点属性，不同则标记待更新。<code>key</code>的另一个作用是增加<code>virtual-Dom</code>移动节点的能力，如果<code>key</code>相同且节点属性相同，只是顺序不同，那就可以移动节点的位置，启到更新的作用。</p><p id="15715916-28bb-4280-a9cb-0292891d798c" class="">
 </p></div></article></body></html>

@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Promise</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Promise的前世今生</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,5 +619,138 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="25757705-2215-438c-aafb-d90b14400710" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">💼</span></div><h1 class="page-title">Promise</h1></header><div class="page-body"><p id="d434f773-9650-48f9-b3d2-6dbd84d3938a" class="">
+</style></head><body><article id="25757705-2215-438c-aafb-d90b14400710" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">💼</span></div><h1 class="page-title">Promise的前世今生</h1></header><div class="page-body"><p id="d434f773-9650-48f9-b3d2-6dbd84d3938a" class="">在没有<code>promise</code>的年代，<code>Ajax Callback</code>盛行，就会看到嵌套多层的代码，这种代码可读性非常差、不利于维护、命名空间问题、调用栈深。</p><pre id="a3b27821-4ee1-4737-8e8d-5f5f8f8d55a5" class="code"><code>ajax({
+	callback: () =&gt; {
+		ajax({
+			callback: () =&gt; {
+				ajax({
+					callback: () =&gt; {
+				
+					}
+				})
+			}
+		})
+	}
+})</code></pre><p id="b772b431-325d-4719-97a8-b1361246a037" class="">
+</p><h2 id="51e612c9-5a0d-4903-9084-fc56daec888b" class="">promise化</h2><pre id="8b5882be-3b39-4339-8771-4fe07a56cb5f" class="code"><code>new Promise((resolve) =&gt; {
+	ajax({
+		callback: resolve
+	})
+})
+.then(() =&gt; {
+	return new Promise((resolve) =&gt; {
+		ajax({
+			callback: resolve
+		})
+	})
+})
+.then(() =&gt; {
+	return new Promise((resolve) =&gt; {
+		ajax({
+			callback: resolve
+		})
+	})
+})</code></pre><p id="12dbc0c4-9c72-4d9d-b4f5-497c831cf4d3" class="">
+</p><h2 id="5a65fb4b-c7cd-4bec-a315-b77a97db3c78" class="">手写promise</h2><pre id="0e9550c9-6a68-46e5-9806-35dd0b040113" class="code"><code>class IPromise {
+  constructor(exector) {
+    // resolved val
+    this._val = null;
+    // rejected val
+    this._reason = null;
+
+    // promise 状态
+    this._status = &quot;pending&quot;;
+
+    // 标记为promise实例
+    this.isPromise = true;
+
+    this.resolvedCallback = [];
+    this.rejectedCallback = [];
+
+    const resolve = (val) =&gt; {
+      setTimeout(() =&gt; {
+        this._val = val;
+
+        this._status = &quot;resolved&quot;;
+
+        this.runCallback(this.resolvedCallback, this._val);
+      }, 0);
+    };
+
+    const reject = (reason) =&gt; {
+      setTimeout(() =&gt; {
+        this._reason = reason;
+
+        this._status = &quot;rejected&quot;;
+
+        this.runCallback(this.rejectedCallback, this._reason);
+      }, 0);
+    };
+
+    try {
+      exector(resolve, reject);
+    } catch (error) {
+      reject(error);
+    }
+  }
+
+  then(resolved, rejected) {
+    let self = this;
+
+    return new IPromise((resolve, reject) =&gt; {
+      const _resolved = (...args) =&gt; {
+        try {
+          const x = resolved(...args);
+
+          if (x instanceof IPromise) {
+            x.then(resolve);
+          } else {
+            resolve(x);
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      const _rejected = (...args) =&gt; {
+        try {
+          const x = rejected(...args);
+          if (x instanceof IPromise) {
+            x.then(resolve);
+          } else {
+            resolve(x);
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      self.resolvedCallback.push(_resolved);
+      self.rejectedCallback.push(_rejected);
+    });
+  }
+
+  runCallback(call_list, payload) {
+    call_list.forEach((fn) =&gt; {
+      fn(payload);
+    });
+  }
+}
+
+new IPromise((resolve) =&gt; {
+  resolve(1);
+})
+  .then(
+    (r) =&gt;
+      new IPromise((resolve) =&gt; {
+        console.log(r);
+        resolve(2);
+      })
+  )
+  .then((s) =&gt; {
+    console.log(s);
+  });
+
+// 1
+// 2</code></pre><p id="984e12f8-f78b-453a-9b41-ac7dd58c5d66" class="">
 </p></div></article></body></html>

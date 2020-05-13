@@ -1,4 +1,4 @@
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>git相关</title><style>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>XSS</title><style>
 /* webkit printing magic: print all background colors */
 html {
 	-webkit-print-color-adjust: exact;
@@ -619,13 +619,6 @@ blockquote {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
-</style></head><body><article id="6d3baf20-e812-4218-9cde-addd809620ad" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🥏</span></div><h1 class="page-title">git相关</h1></header><div class="page-body"><p id="813a45a3-aaff-4e2d-88c8-07ed0d27af50" class="">
-</p><h2 id="dbb26c19-6ae5-45b8-990e-0cc63e392aab" class="">git commit 管理</h2><figure id="57036942-5bbb-43cb-9aef-1c581871f712"><a href="https://github.com/commitizen/cz-cli" class="bookmark source"><div class="bookmark-info"><div class="bookmark-text"><div class="bookmark-title">commitizen/cz-cli</div><div class="bookmark-description">When you commit with Commitizen, you&#x27;ll be prompted to fill out any required commit fields at commit time. No more waiting until later for a git commit hook to run and reject your commit (though that can still be helpful). No more digging through CONTRIBUTING.md to find what the preferred format is.</div></div><div class="bookmark-href"><img src="https://github.com/favicon.ico" class="icon bookmark-icon"/>https://github.com/commitizen/cz-cli</div></div><img src="https://avatars3.githubusercontent.com/u/11980392?s=400&amp;v=4" class="bookmark-image"/></a></figure><p id="49b522ee-db94-4be3-976f-09ea74b50327" class="">
-</p><h2 id="2729dd20-9255-442e-b718-d2a6224ebaa5" class="">git scope config，在工作目录使用特定的配置。</h2><p id="c5b32140-eefc-41d2-ac88-451070eadf35" class="">全局配置 ~/.gitconfig</p><pre id="fbe811b1-c83e-4636-bfac-a5331c884469" class="code"><code>[user]
-    name = nullwuwu
-    email = 13671802215@163.com
-
-[includeIf &quot;gitdir:~/work/&quot;]
-    path = ~/work/.gitconfig</code></pre><p id="ec09edfc-953b-4d0a-9190-8fe3de3d0129" class="">工作目录特定的配置 ~/work/.gitconfig</p><pre id="ac8928c9-0b13-42a6-a08d-487b4f52aee8" class="code"><code>[user]
-	name = caominjie
-	email = caominjie@company.com</code></pre></div></article></body></html>
+</style></head><body><article id="1f257c68-6de0-4977-9a6d-48cbe9dc97e9" class="page sans"><header><div class="page-header-icon undefined"><span class="icon">🚗</span></div><h1 class="page-title">XSS</h1></header><div class="page-body"><h1 id="2f7ce4e2-1278-4e5f-8a79-1f73f7b6671a" class="">Cross Site Scripting 跨站脚本</h1><p id="2ae13cba-ad19-407d-b3bb-b7a95ce5734b" class="">
+</p><h3 id="77da4947-2166-434a-a9f0-5c8353ef7833" class="">攻击类型：</h3><ul id="e591d2c1-2c3a-4b93-918b-f56464c88ee7" class="bulleted-list"><li>反射型：服务端返回，客户端执行<ul id="de4b8644-fe90-41bf-926f-d82773efc7dd" class="bulleted-list"><li>URL注入攻击脚本（chrome会拦截）</li></ul><ul id="cbf2ffb2-3349-436c-bb54-aaeb8f88f9a8" class="bulleted-list"><li>渲染服务端返回的包含攻击脚本的富文本</li></ul></li></ul><ul id="e13cf87f-a762-4e51-966c-ae3754985771" class="bulleted-list"><li>存储型：后端存储了攻击脚本，被前端渲染<ul id="53e6978a-4793-4c0c-a247-261ce8ba843d" class="bulleted-list"><li>发帖场景，富文本内容前后端都不过滤，存储入表。</li></ul></li></ul><ul id="1e2b6d39-8b18-47b6-8440-0bbfa3a49656" class="bulleted-list"><li>DOM-Based型<ul id="d4fdce73-7095-489b-a51b-33ef5885637b" class="bulleted-list"><li>利用本地代码不健全的问题</li></ul></li></ul><h2 id="564bb0e5-1d84-4052-92ba-a81eeaff2857" class="">防范</h2><p id="c0448f17-6ab2-480b-81de-646301a48e0b" class="">对输入进行过滤，</p><p id="e98b38f8-2545-46e8-b2ef-54741c9e9301" class="">对输出进行编码，</p><p id="e995baf0-12e5-42c7-bfbe-c7647462ada2" class="">Cookie设置<code>http-only</code></p><p id="3459ff65-130f-44d0-9120-bff42f8bfc87" class="">
+</p></div></article></body></html>

@@ -2,4 +2,4 @@
 
 欢迎交流。
 
-![wechat](./WechatIMG256.jpeg){:height="200px" width="200px"}
+![wechat-w80](./WechatIMG256.jpeg)
